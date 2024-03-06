@@ -9,11 +9,14 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = "my-jwt";
 
 // Hardcoded user data
-const hardcodedUser = {
-  email: "test@mail.com",
-  //   passwordHash: "$2a$10$EwITM6VQkXuUx4KQzeIe9OT0vDzPNjFvRvSkHJ5nDC5p.u4yqOKlO", // Hashed version of "pass123"
-  password: "pass123",
-};
+const hardcodedUsers = [
+  {
+    email: "test@mail.com",
+    //   passwordHash: "$2a$10$EwITM6VQkXuUx4KQzeIe9OT0vDzPNjFvRvSkHJ5nDC5p.u4yqOKlO", // Hashed version of "pass123"
+    password: "pass123",
+  },
+  { email: "test2@mail.com", password: "pass321" },
+];
 
 app.use(express.json());
 
@@ -24,27 +27,12 @@ app.get("/", (req, res) => {
   res.send("Hello server!");
 });
 
-app.post("/auth", (req, res) => {
-  const { email, password } = req.body;
-  if (hardcodedUser.email === email) {
-    console.log("email milche");
-  } else {
-    console.log("email mile nai");
-  }
-  if (hardcodedUser.password === password) {
-    console.log("pass milche");
-  } else {
-    console.log("pass mile nai");
-  }
-  if (hardcodedUser.email === email && hardcodedUser.password === password)
-    res.status(200).json({ token: "ok" });
-  else return res.status(401).json({ error: "invalid" });
-});
-
 // Route for handling login
 app.post("/login", async (req, res) => {
   // Extract email and password from request body
   const { email, password } = req.body;
+
+  const hardcodedUser = hardcodedUsers.find((user) => user.email === email);
 
   try {
     // Check if email matches the hardcoded user
